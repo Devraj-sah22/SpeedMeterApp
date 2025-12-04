@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "EFWOH7phE8U=",
+  "success": true,
+  "projectFilePath": "D:\\CS\\SpeedMeterApp\\SpeedMeterApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
+    "C:\\Users\\dsah8\\.nuget\\packages\\system.drawing.common\\8.0.8\\system.drawing.common.8.0.8.nupkg.sha512",
+    "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.20\\microsoft.netcore.app.ref.8.0.20.nupkg.sha512",
+    "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.20\\microsoft.windowsdesktop.app.ref.8.0.20.nupkg.sha512",
+    "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.20\\microsoft.aspnetcore.app.ref.8.0.20.nupkg.sha512",
+    "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.20\\microsoft.netcore.app.host.win-x64.8.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}
