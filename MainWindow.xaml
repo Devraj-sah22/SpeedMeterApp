@@ -39,6 +39,7 @@
                     <MenuItem Header="KB/s (Default)" Click="Units_Click" Tag="KB"/>
                     <MenuItem Header="MB/s" Click="Units_Click" Tag="MB"/>
                 </MenuItem>
+                
 
                 <!-- Refresh interval -->
                 <MenuItem Header="Speed Refresh Time">
