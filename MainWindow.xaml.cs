@@ -1027,12 +1027,28 @@ namespace SpeedMeterApp
                 notifyIcon.Visible = true;
 
                 var contextMenu = new System.Windows.Forms.ContextMenuStrip();
-                contextMenu.Items.Add("Show", null, (s, e) => ShowWindow());
-                contextMenu.Items.Add("Hide", null, (s, e) => HideWindow());
+
+                // Create menu items
+                var hideMenuItem = new System.Windows.Forms.ToolStripMenuItem("Hide", null, (s, e) => HideWindow());
+                var showMenuItem = new System.Windows.Forms.ToolStripMenuItem("Show", null, (s, e) => ShowWindow());
+
+                // "Always on Top" with checkmark
+                var alwaysOnTopMenuItem = new System.Windows.Forms.ToolStripMenuItem("Always on Top", null, ToggleAlwaysOnTop!);
+                alwaysOnTopMenuItem.Checked = this.Topmost; // Set initial check state
+
+                // "Start with Windows" with checkmark
+                var startWithWindowsMenuItem = new System.Windows.Forms.ToolStripMenuItem("Start with Windows", null, ToggleStartup!);
+                startWithWindowsMenuItem.Checked = IsStartupEnabled(); // Check if already in startup
+
+                // Add items to menu
+                contextMenu.Items.Add(hideMenuItem);
+                contextMenu.Items.Add(showMenuItem);
                 contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-                contextMenu.Items.Add("Always on Top", null, ToggleAlwaysOnTop!);
-                contextMenu.Items.Add("Start with Windows", null, ToggleStartup!);
+                contextMenu.Items.Add(alwaysOnTopMenuItem);
+                contextMenu.Items.Add(startWithWindowsMenuItem);
                 contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+
+                // Rest of menu items (keep your existing ones)
                 contextMenu.Items.Add("Toggle Logging", null, (s, e) => ToggleLogging());
                 contextMenu.Items.Add("Ping Now", null, (s, e) => TriggerPingNow());
                 contextMenu.Items.Add("Show Totals", null, (s, e) => ShowTotals());
@@ -1042,10 +1058,9 @@ namespace SpeedMeterApp
                 contextMenu.Items.Add("Connection Info", null, ShowConnectionInfo!);
                 contextMenu.Items.Add("Refresh Network", null, RefreshNetwork!);
                 contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
-                contextMenu.Items.Add("Exit", null, ExitApplication!);
-                // contextMenu.Items.Add("History Dashboard", null, (s, e) => ShowHistoryWindow());
-                // In MainWindow.xaml.cs, update the tray menu:
                 contextMenu.Items.Add("📊 Premium Dashboard", null, (s, e) => ShowPremiumDashboard());
+                contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+                contextMenu.Items.Add("Exit", null, ExitApplication!);
 
                 notifyIcon.ContextMenuStrip = contextMenu;
 
@@ -1053,6 +1068,8 @@ namespace SpeedMeterApp
                 {
                     if (e.Button == System.Windows.Forms.MouseButtons.Right)
                     {
+                        // Update checkmarks before showing menu
+                        UpdateMenuCheckmarks(contextMenu);
                         contextMenu.Show(System.Windows.Forms.Cursor.Position);
                     }
                     else if (e.Button == System.Windows.Forms.MouseButtons.Left)
@@ -1068,8 +1085,66 @@ namespace SpeedMeterApp
                 System.Windows.MessageBox.Show($"Error setting up tray icon: {ex.Message}");
             }
         }
+
+        private void UpdateMenuCheckmarks(System.Windows.Forms.ContextMenuStrip menu)
+        {
+            if (menu == null) return;
+
+            // Find and update "Always on Top" checkmark
+            foreach (System.Windows.Forms.ToolStripItem item in menu.Items)
+            {
+                if (item is System.Windows.Forms.ToolStripMenuItem menuItem)
+                {
+                    if (menuItem.Text == "Always on Top")
+                    {
+                        menuItem.Checked = this.Topmost;
+                    }
+                    else if (menuItem.Text == "Start with Windows")
+                    {
+                        menuItem.Checked = IsStartupEnabled();
+                    }
+                    else if (menuItem.Text == "Hide" || menuItem.Text == "Show")
+                    {
+                        // Update Hide/Show based on window visibility
+                        if (this.IsVisible)
+                        {
+                            if (menuItem.Text == "Hide") menuItem.Enabled = true;
+                            if (menuItem.Text == "Show") menuItem.Enabled = false;
+                        }
+                        else
+                        {
+                            if (menuItem.Text == "Hide") menuItem.Enabled = false;
+                            if (menuItem.Text == "Show") menuItem.Enabled = true;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        private bool IsStartupEnabled()
+        {
+            try
+            {
+                string appName = "SpeedMeterApp";
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", false))
+                {
+                    if (key != null)
+                    {
+                        return key.GetValue(appName) != null;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore errors
+            }
+            return false;
+        }
+
         // In MainWindow.xaml.cs, update the method that creates DashboardWindow:
-        
+
         private void ShowPremiumDashboard()
         {
             try
@@ -1104,14 +1179,21 @@ namespace SpeedMeterApp
             this.WindowState = WindowState.Normal;
             // restart sampling (if it was stopped)
             StartColorSampling();
+
             // Make sure it's on top
             this.Topmost = true;
+
+            // Update menu - ADD THIS LINE
+            UpdateHideShowMenu();
         }
 
         private void HideWindow()
         {
             this.Hide();
             StopColorSampling();
+
+            // Update menu - ADD THIS LINE
+            UpdateHideShowMenu();
         }
 
         private void ToggleWindowVisibility()
@@ -1122,7 +1204,29 @@ namespace SpeedMeterApp
         private void ToggleAlwaysOnTop(object sender, EventArgs e)
         {
             this.Topmost = !this.Topmost;
-            if (notifyIcon != null) notifyIcon.Text = this.Topmost ? "Network Speed Meter (Always on Top)" : "Network Speed Meter";
+
+            // Update tray icon text
+            if (notifyIcon != null)
+            {
+                notifyIcon.Text = this.Topmost ? "Network Speed Meter (Always on Top)" : "Network Speed Meter";
+            }
+
+            // Update checkmark in menu
+            UpdateAlwaysOnTopCheckmark();
+        }
+
+        private void UpdateAlwaysOnTopCheckmark()
+        {
+            if (notifyIcon?.ContextMenuStrip == null) return;
+
+            foreach (System.Windows.Forms.ToolStripItem item in notifyIcon.ContextMenuStrip.Items)
+            {
+                if (item is System.Windows.Forms.ToolStripMenuItem menuItem && menuItem.Text == "Always on Top")
+                {
+                    menuItem.Checked = this.Topmost;
+                    break;
+                }
+            }
         }
 
         private void ToggleStartup(object sender, EventArgs e)
@@ -1151,6 +1255,9 @@ namespace SpeedMeterApp
                             System.Windows.MessageBox.Show("Removed from Windows startup.", "Startup Settings",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
                         }
+                        // Update checkmark in menu
+                        UpdateStartupCheckmark();
+
                     }
                 }
             }
@@ -1158,6 +1265,39 @@ namespace SpeedMeterApp
             {
                 System.Windows.MessageBox.Show($"Error managing startup: {ex.Message}", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void UpdateStartupCheckmark()
+        {
+            if (notifyIcon?.ContextMenuStrip == null) return;
+
+            foreach (System.Windows.Forms.ToolStripItem item in notifyIcon.ContextMenuStrip.Items)
+            {
+                if (item is System.Windows.Forms.ToolStripMenuItem menuItem && menuItem.Text == "Start with Windows")
+                {
+                    menuItem.Checked = IsStartupEnabled();
+                    break;
+                }
+            }
+        }
+        private void UpdateHideShowMenu()
+        {
+            if (notifyIcon?.ContextMenuStrip == null) return;
+
+            foreach (System.Windows.Forms.ToolStripItem item in notifyIcon.ContextMenuStrip.Items)
+            {
+                if (item is System.Windows.Forms.ToolStripMenuItem menuItem)
+                {
+                    if (menuItem.Text == "Hide")
+                    {
+                        menuItem.Enabled = this.IsVisible;
+                    }
+                    else if (menuItem.Text == "Show")
+                    {
+                        menuItem.Enabled = !this.IsVisible;
+                    }
+                }
             }
         }
 
