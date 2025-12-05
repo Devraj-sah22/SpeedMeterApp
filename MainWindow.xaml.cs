@@ -93,7 +93,7 @@ namespace SpeedMeterApp
             PositionWindowTopRight();
 
             // optional: remove this if you don't want a modal message at startup
-            System.Windows.MessageBox.Show("Application started! Check system tray for icon.");
+            //System.Windows.MessageBox.Show("Application started! Check system tray for icon.");
 
             // Hook drag event if the border exists in XAML
             try
@@ -106,7 +106,7 @@ namespace SpeedMeterApp
                 // ignore
             }
 
-            this.Hide(); // start hidden
+            //this.Hide(); // start hidden
         }
 
         // ----- History storage (24-hour rolling) -----
@@ -550,6 +550,7 @@ namespace SpeedMeterApp
 
             // start color sampling
             StartColorSampling();
+
         }
 
         // Constants for GetWindowLong/SetWindowLong indices
@@ -1068,6 +1069,7 @@ namespace SpeedMeterApp
             }
         }
         // In MainWindow.xaml.cs, update the method that creates DashboardWindow:
+        
         private void ShowPremiumDashboard()
         {
             try
