@@ -133,11 +133,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\CS\\SpeedMeterApp\\SpeedMeterApp.csproj",
+      "projectUniqueName": "D:\\CSharp\\SpeedMeterApp\\SpeedMeterApp.csproj",
       "projectName": "SpeedMeterApp",
-      "projectPath": "D:\\CS\\SpeedMeterApp\\SpeedMeterApp.csproj",
+      "projectPath": "D:\\CSharp\\SpeedMeterApp\\SpeedMeterApp.csproj",
       "packagesPath": "C:\\Users\\dsah8\\.nuget\\packages\\",
-      "outputPath": "D:\\CS\\SpeedMeterApp\\obj\\",
+      "outputPath": "D:\\CSharp\\SpeedMeterApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\dsah8\\AppData\\Roaming\\NuGet\\NuGet.Config"

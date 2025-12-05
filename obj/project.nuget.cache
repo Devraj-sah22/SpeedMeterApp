@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "EFWOH7phE8U=",
+  "dgSpecHash": "Yy8UvAh7Bto=",
   "success": true,
-  "projectFilePath": "D:\\CS\\SpeedMeterApp\\SpeedMeterApp.csproj",
+  "projectFilePath": "D:\\CSharp\\SpeedMeterApp\\SpeedMeterApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dsah8\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
     "C:\\Users\\dsah8\\.nuget\\packages\\system.drawing.common\\8.0.8\\system.drawing.common.8.0.8.nupkg.sha512",

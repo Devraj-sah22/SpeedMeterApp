@@ -537,6 +537,7 @@ namespace SpeedMeterApp
             this.Left = workingArea.Right - w - 8;
             this.Top = workingArea.Top + 8;
             this.WindowStartupLocation = WindowStartupLocation.Manual;
+
         }
 
         private void MainWindow_SourceInitialized(object? sender, EventArgs e)
@@ -1101,6 +1102,8 @@ namespace SpeedMeterApp
             this.WindowState = WindowState.Normal;
             // restart sampling (if it was stopped)
             StartColorSampling();
+            // Make sure it's on top
+            this.Topmost = true;
         }
 
         private void HideWindow()
@@ -1125,7 +1128,9 @@ namespace SpeedMeterApp
             try
             {
                 string appName = "SpeedMeterApp";
-                string executablePath = Assembly.GetExecutingAssembly().Location;
+
+                // Get the EXE file path
+                string executablePath = GetExecutablePath();
 
                 using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true))
                 {
@@ -1133,21 +1138,71 @@ namespace SpeedMeterApp
                     {
                         if (key.GetValue(appName) == null)
                         {
+                            // Register with EXE path
                             key.SetValue(appName, $"\"{executablePath}\"");
-                            System.Windows.MessageBox.Show("Added to Windows startup.");
+                            System.Windows.MessageBox.Show($"Added to Windows startup:\n{executablePath}", "Startup Settings",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         else
                         {
                             key.DeleteValue(appName);
-                            System.Windows.MessageBox.Show("Removed from Windows startup.");
+                            System.Windows.MessageBox.Show("Removed from Windows startup.", "Startup Settings",
+                                MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Error managing startup: {ex.Message}");
+                System.Windows.MessageBox.Show($"Error managing startup: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private string GetExecutablePath()
+        {
+            // Get the current process
+            Process currentProcess = Process.GetCurrentProcess();
+
+            // Try to get the main module (EXE file)
+            try
+            {
+                string mainModulePath = currentProcess.MainModule.FileName;
+                if (File.Exists(mainModulePath) && mainModulePath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    return mainModulePath;
+                }
+            }
+            catch
+            {
+                // Continue to fallback method
+            }
+
+            // Fallback: Look for EXE file in application directory
+            string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+            string assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
+
+            if (!string.IsNullOrEmpty(assemblyDirectory))
+            {
+                // Get the process name and look for matching EXE
+                string processName = currentProcess.ProcessName;
+                string expectedExePath = Path.Combine(assemblyDirectory, processName + ".exe");
+
+                if (File.Exists(expectedExePath))
+                {
+                    return expectedExePath;
+                }
+
+                // Look for any EXE file in the directory
+                var exeFiles = Directory.GetFiles(assemblyDirectory, "*.exe");
+                if (exeFiles.Length > 0)
+                {
+                    return exeFiles[0];
+                }
+            }
+
+            // Last resort: Return assembly location (might be DLL)
+            return assemblyLocation;
         }
 
         private void ChangeBackgroundColor(object sender, EventArgs e)
