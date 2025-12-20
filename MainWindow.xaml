@@ -23,40 +23,66 @@
 
                 <!-- Fonts -->
                 <MenuItem Header="Fonts">
-                    <MenuItem Header="Change Font Family" Click="ChangeFontFamily_Click"/>
+                    <MenuItem Header="Change Font Family"
+                            Click="ChangeFontFamily_Click"/>
                     <MenuItem Header="Change Font Size">
-                        <MenuItem Header="10" Click="ChangeFontSize_Click" Tag="10"/>
-                        <MenuItem Header="12" Click="ChangeFontSize_Click" Tag="12"/>
-                        <MenuItem Header="14" Click="ChangeFontSize_Click" Tag="14"/>
-                        <MenuItem Header="16" Click="ChangeFontSize_Click" Tag="16"/>
-                        <MenuItem Header="18" Click="ChangeFontSize_Click" Tag="18"/>
+                        <MenuItem Header="10"
+                                Click="ChangeFontSize_Click"
+                                Tag="10"/>
+                        <MenuItem Header="12"
+                                Click="ChangeFontSize_Click"
+                                Tag="12"/>
+                        <MenuItem Header="14"
+                                Click="ChangeFontSize_Click"
+                                Tag="14"/>
+                        <MenuItem Header="16"
+                                Click="ChangeFontSize_Click"
+                                Tag="16"/>
+                        <MenuItem Header="18"
+                                Click="ChangeFontSize_Click"
+                                Tag="18"/>
                     </MenuItem>
-                    <MenuItem Header="Change Font Color" Click="ChangeFontColor_Click"/>
+                    <MenuItem Header="Change Font Color"
+                            Click="ChangeFontColor_Click"/>
                 </MenuItem>
 
                 <!-- Units -->
                 <MenuItem Header="Units">
-                    <MenuItem Header="KB/s (Default)" Click="Units_Click" Tag="KB"/>
-                    <MenuItem Header="MB/s" Click="Units_Click" Tag="MB"/>
+                    <MenuItem Header="KB/s (Default)"
+                            Click="Units_Click"
+                            Tag="KB"/>
+                    <MenuItem Header="MB/s"
+                            Click="Units_Click"
+                            Tag="MB"/>
                 </MenuItem>
-                
+
 
                 <!-- Refresh interval -->
                 <MenuItem Header="Speed Refresh Time">
-                    <MenuItem Header="500 ms" Click="RefreshInterval_Click" Tag="500"/>
-                    <MenuItem Header="1000 ms" Click="RefreshInterval_Click" Tag="1000"/>
-                    <MenuItem Header="2000 ms" Click="RefreshInterval_Click" Tag="2000"/>
+                    <MenuItem Header="500 ms"
+                            Click="RefreshInterval_Click"
+                            Tag="500"/>
+                    <MenuItem Header="1000 ms"
+                            Click="RefreshInterval_Click"
+                            Tag="1000"/>
+                    <MenuItem Header="2000 ms"
+                            Click="RefreshInterval_Click"
+                            Tag="2000"/>
                 </MenuItem>
 
                 <Separator/>
 
-                <MenuItem Header="Connection Info" Click="ShowConnectionInfoFromMenu_Click"/>
-                <MenuItem Header="Refresh Connection" Click="RefreshNetworkFromMenu_Click"/>
-                <MenuItem Header="Toggle Debug Info" Click="ToggleDebug_Click"/>
-                
+                <MenuItem Header="Connection Info"
+                        Click="ShowConnectionInfoFromMenu_Click"/>
+                <MenuItem Header="Refresh Connection"
+                        Click="RefreshNetworkFromMenu_Click"/>
+                <MenuItem Header="Toggle Debug Info"
+                        Click="ToggleDebug_Click"/>
+
                 <Separator/>
 
-                <MenuItem Header="Restore Default" Click="RestoreDefaults_Click"/>
+                <MenuItem Header="Restore Default"
+                        Click="RestoreDefaults_Click"/>
 
             </ContextMenu>
         </Border.ContextMenu>
@@ -84,12 +110,12 @@
                         Margin="0">
                 <!-- Debug overlay (hidden by default; shows sampled color and decision) -->
                 <TextBlock x:Name="TxtDebugOverlay"
-                            FontSize="10"
-                            Foreground="#FFCCCCCC"
-                            FontFamily="Consolas"
-                            Margin="0,4,0,0"
-                            TextWrapping="Wrap"
-                            Visibility="Collapsed" />
+                           FontSize="10"
+                           Foreground="#FFCCCCCC"
+                           FontFamily="Consolas"
+                           Margin="0,4,0,0"
+                           TextWrapping="Wrap"
+                           Visibility="Collapsed"/>
 
 
 
@@ -113,6 +139,17 @@
                            FontFamily="Segoe UI"/>
 
             </StackPanel>
+            <!-- TEST BUTTON - Add this line -->
+            <Button x:Name="BtnTestNotification"
+                    Content="Test Notification"
+                    Click="TestNotification_Click"
+                    Margin="5,10,5,0"
+                    Background="#2A2A2A"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Padding="4,2"
+                    Visibility="Visible"/>
+            <!-- Set to Visible for testing, Collapsed when done -->
         </StackPanel>
 
     </Border>

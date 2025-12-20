@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpeedMeterApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+060ab2921836f44749bae43b8174ef365e0cf4c3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3a6c3d8026b22e9d593446e356bcb905d99fc59")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpeedMeterApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpeedMeterApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

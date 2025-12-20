@@ -68,6 +68,254 @@ namespace SpeedMeterApp
 
         // Make nullable to avoid CS8618 (set by XAML at runtime typically)
         public object? TxtDebug { get; private set; }
+        // Add these lines with your other fields
+        private bool _wasConnected = true;
+        private System.Windows.Forms.PowerLineStatus _lastPowerStatus = System.Windows.Forms.PowerLineStatus.Offline;
+        private int _lastBatteryPercentage = 100;
+        private DateTime _lastNetworkCheck = DateTime.MinValue;
+        private DateTime _lastBatteryCheck = DateTime.MinValue;
+        private System.Windows.Forms.Timer? _monitoringTimer;
+
+        // Add this enum outside the method, inside the class
+        public enum NotificationType
+        {
+            NetworkConnected,
+            NetworkDisconnected,
+            PowerConnected,
+            PowerDisconnected,
+            BatteryHigh,
+            BatteryMedium,
+            BatteryLow,
+            BatteryCritical,
+            Info,
+            Success,
+            Warning,
+            Error
+        }
+
+        // FIXED: Create brushes directly instead of trying to get them from resources
+        private (System.Windows.Media.Brush brush, System.Windows.Media.Brush iconBrush, string icon, int duration)
+            GetNotificationProperties(NotificationType type)
+        {
+            return type switch
+            {
+                NotificationType.NetworkConnected => (
+                    CreateGlassGradientBrush("#AA00C853", "#AA00A83E", "#AA008B3A"), // Success gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x69, 0xF0, 0xAE)), // Success icon color
+                    "🌐",
+                    4000
+                ),
+
+                NotificationType.NetworkDisconnected => (
+                    CreateGlassGradientBrush("#AAD32F2F", "#AAC62828", "#AAB71C1C"), // Error gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x80)), // Error icon color
+                    "📡",
+                    5000
+                ),
+
+                NotificationType.PowerConnected => (
+                    CreateGlassGradientBrush("#AA7C4DFF", "#AA651FFF", "#AA6200EA"), // Power gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xB3, 0x88, 0xFF)), // Power icon color
+                    "⚡",
+                    4000
+                ),
+
+                NotificationType.PowerDisconnected => (
+                    CreateGlassGradientBrush("#AAFFB300", "#AAFFA000", "#AAFF8F00"), // Warning gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0xD7, 0x40)), // Warning icon color
+                    "🔌",
+                    4000
+                ),
+
+                NotificationType.BatteryHigh => (
+                    CreateGlassGradientBrush("#AA64DD17", "#AA4CAF50", "#AA2E7D32"), // Battery high gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xCC, 0xFF, 0x90)), // Battery high icon color
+                    "🔋",
+                    4000
+                ),
+
+                NotificationType.BatteryMedium => (
+                    CreateGlassGradientBrush("#AAFFD600", "#AAFFC107", "#AAFF9800"), // Battery medium gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0xFF, 0x8D)), // Battery medium icon color
+                    "🔋",
+                    4000
+                ),
+
+                NotificationType.BatteryLow => (
+                    CreateGlassGradientBrush("#AAFF5722", "#AAD84315", "#AABF360C"), // Battery low gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0xAB, 0x91)), // Battery low icon color
+                    "🔋",
+                    5000
+                ),
+
+                NotificationType.BatteryCritical => (
+                    CreateGlassGradientBrush("#AADD2C00", "#AAC62828", "#AAB71C1C"), // Battery critical gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0xFF, 0x8A, 0x80)), // Battery critical icon color
+                    "🔥",
+                    7000
+                ),
+
+                _ => (
+                    CreateGlassGradientBrush("#AA00B8D4", "#AA0097A7", "#AA00838F"), // Default network gradient
+                    new SolidColorBrush(System.Windows.Media.Color.FromRgb(0x00, 0xE5, 0xFF)), // Default icon color
+                    "ⓘ",
+                    5000
+                )
+            };
+        }
+
+        // Helper method to create glass gradient brushes - UPDATED to use FF (fully opaque)
+        private LinearGradientBrush CreateGlassGradientBrush(string color1, string color2, string color3)
+        {
+            var brush = new LinearGradientBrush
+            {
+                StartPoint = new System.Windows.Point(0, 0),
+                EndPoint = new System.Windows.Point(1, 1)
+            };
+
+            // Changed from AA (semi-transparent) to FF (fully opaque)
+            brush.GradientStops.Add(new GradientStop(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color1.Replace("#AA", "#FF")), 0));
+            brush.GradientStops.Add(new GradientStop(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color2.Replace("#AA", "#FF")), 0.5));
+            brush.GradientStops.Add(new GradientStop(
+                (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color3.Replace("#AA", "#FF")), 1));
+
+            return brush;
+        }
+
+        // Update the ShowPremiumNotification method
+        private void ShowPremiumNotification(string title, string message, NotificationType type)
+        {
+            try
+            {
+                Debug.WriteLine($"ShowPremiumNotification: {title} - {type}");
+
+                Dispatcher.Invoke(() =>
+                {
+                    try
+                    {
+                        var (brush, iconBrush, icon, duration) = GetNotificationProperties(type);
+
+                        var notification = new PremiumNotification(
+                            title,
+                            message,
+                            icon,
+                            brush,
+                            iconBrush,
+                            duration
+                        );
+
+                        notification.Show();
+
+                        // Also show system tray notification
+                        if (notifyIcon != null)
+                        {
+                            System.Windows.Forms.ToolTipIcon trayIcon = type switch
+                            {
+                                NotificationType.NetworkDisconnected or
+                                NotificationType.BatteryCritical or
+                                NotificationType.Error => System.Windows.Forms.ToolTipIcon.Error,
+
+                                NotificationType.BatteryLow or
+                                NotificationType.BatteryMedium or
+                                NotificationType.Warning => System.Windows.Forms.ToolTipIcon.Warning,
+
+                                _ => System.Windows.Forms.ToolTipIcon.Info
+                            };
+
+                            notifyIcon.ShowBalloonTip(3000, title, message, trayIcon);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error creating notification in UI thread: {ex.Message}");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Notification error: {ex.Message}");
+            }
+        }
+
+        // SIMPLIFIED VERSION FOR DEBUGGING
+        private void ShowSimpleNotification(string title, string message, NotificationType type)
+        {
+            try
+            {
+                Debug.WriteLine($"Simple Notification: {title}");
+
+                Dispatcher.Invoke(() =>
+                {
+                    // Create a simple notification window without resources
+                    var simpleWindow = new Window
+                    {
+                        Title = title,
+                        Width = 400,
+                        Height = 120,
+                        WindowStyle = WindowStyle.None,
+                        AllowsTransparency = true,
+                        Background = System.Windows.Media.Brushes.Transparent,
+                        Topmost = true,
+                        ShowInTaskbar = false,
+                        WindowStartupLocation = WindowStartupLocation.Manual
+                    };
+
+                    // Position it
+                    var screen = System.Windows.Forms.Screen.PrimaryScreen;
+                    simpleWindow.Left = screen.WorkingArea.Right - 420;
+                    simpleWindow.Top = screen.WorkingArea.Bottom - 140;
+
+                    // Create content
+                    var border = new Border
+                    {
+                        Background = System.Windows.Media.Brushes.DarkBlue,
+                        CornerRadius = new CornerRadius(10),
+                        Margin = new Thickness(10),
+                        Padding = new Thickness(15)
+                    };
+
+                    var stack = new StackPanel();
+                    stack.Children.Add(new TextBlock
+                    {
+                        Text = title,
+                        Foreground = System.Windows.Media.Brushes.White,
+                        FontWeight = FontWeights.Bold,
+                        FontSize = 16
+                    });
+
+                    stack.Children.Add(new TextBlock
+                    {
+                        Text = message,
+                        Foreground = System.Windows.Media.Brushes.White,
+                        FontSize = 14,
+                        Margin = new Thickness(0, 5, 0, 0)
+                    });
+
+                    border.Child = stack;
+                    simpleWindow.Content = border;
+
+                    // Show and auto-close
+                    simpleWindow.Show();
+
+                    var timer = new DispatcherTimer();
+                    timer.Interval = TimeSpan.FromSeconds(3);
+                    timer.Tick += (s, e) =>
+                    {
+                        timer.Stop();
+                        simpleWindow.Close();
+                    };
+                    timer.Start();
+
+                    Debug.WriteLine("Simple notification shown!");
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Simple notification error: {ex.Message}");
+            }
+        }
 
         public MainWindow()
         {
@@ -92,9 +340,6 @@ namespace SpeedMeterApp
             StartHistoryFlushTimer();
             PositionWindowTopRight();
 
-            // optional: remove this if you don't want a modal message at startup
-            //System.Windows.MessageBox.Show("Application started! Check system tray for icon.");
-
             // Hook drag event if the border exists in XAML
             try
             {
@@ -106,7 +351,23 @@ namespace SpeedMeterApp
                 // ignore
             }
 
-            //this.Hide(); // start hidden
+            // Initialize monitoring timers with a delay to ensure window is loaded
+            this.Loaded += (s, e) =>
+            {
+                // Start with a small delay to ensure everything is initialized
+                DispatcherTimer initTimer = new DispatcherTimer();
+                initTimer.Interval = TimeSpan.FromSeconds(1);
+                initTimer.Tick += (timerSender, timerArgs) =>
+                {
+                    initTimer.Stop();
+                    StartMonitoringTimers();
+
+                    // Test that notifications work
+                    Debug.WriteLine("Initializing - testing notification system...");
+                    ShowSimpleNotification("SpeedMeter", "Application started successfully", NotificationType.Info);
+                };
+                initTimer.Start();
+            };
         }
 
         // ----- History storage (24-hour rolling) -----
@@ -409,9 +670,7 @@ namespace SpeedMeterApp
                     Title = "SpeedMeterApp — History (last 24h)",
                     Width = 800,
                     Height = 520,
-                    // Don't set Owner if window is hidden - this causes the error
-                    // WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                    WindowStartupLocation = WindowStartupLocation.CenterScreen // Changed from CenterOwner
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
                 };
 
                 var grid = new Grid();
@@ -537,7 +796,6 @@ namespace SpeedMeterApp
             this.Left = workingArea.Right - w - 8;
             this.Top = workingArea.Top + 8;
             this.WindowStartupLocation = WindowStartupLocation.Manual;
-
         }
 
         private void MainWindow_SourceInitialized(object? sender, EventArgs e)
@@ -550,7 +808,6 @@ namespace SpeedMeterApp
 
             // start color sampling
             StartColorSampling();
-
         }
 
         // Constants for GetWindowLong/SetWindowLong indices
@@ -1121,8 +1378,6 @@ namespace SpeedMeterApp
             }
         }
 
-
-
         private bool IsStartupEnabled()
         {
             try
@@ -1144,7 +1399,6 @@ namespace SpeedMeterApp
         }
 
         // In MainWindow.xaml.cs, update the method that creates DashboardWindow:
-
         private void ShowPremiumDashboard()
         {
             try
@@ -1281,6 +1535,7 @@ namespace SpeedMeterApp
                 }
             }
         }
+
         private void UpdateHideShowMenu()
         {
             if (notifyIcon?.ContextMenuStrip == null) return;
@@ -1322,7 +1577,9 @@ namespace SpeedMeterApp
 
             // Fallback: Look for EXE file in application directory
             string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             string assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
 
             if (!string.IsNullOrEmpty(assemblyDirectory))
             {
@@ -1436,6 +1693,7 @@ namespace SpeedMeterApp
 
         protected override void OnClosed(EventArgs e)
         {
+            StopMonitoringTimers(); // ADD THIS LINE
             StopColorSampling();
             speedTimer?.Dispose();
             pingTimer?.Dispose();
@@ -1447,6 +1705,7 @@ namespace SpeedMeterApp
             try { notifyIcon?.Dispose(); } catch { }
             base.OnClosed(e);
         }
+
         // in MainWindow class (make sure 'using SpeedMeterApp.Models;' is present at top)
         public string GetLogFolder() => logFolder;
 
@@ -1480,6 +1739,242 @@ namespace SpeedMeterApp
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void TestNotification_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Test Notification button clicked");
+
+            // Test with simple notification first
+            ShowSimpleNotification("Test Notification", "Testing the notification system", NotificationType.Info);
+
+            // Then test the full system after 1 second
+            DispatcherTimer testTimer = new DispatcherTimer();
+            testTimer.Interval = TimeSpan.FromSeconds(1);
+            testTimer.Tick += (s, args) =>
+            {
+                testTimer.Stop();
+
+                // Test each notification type
+                ShowPremiumNotification("Network Connected", "Internet connection restored", NotificationType.NetworkConnected);
+
+                // Test another after 2 seconds
+                DispatcherTimer testTimer2 = new DispatcherTimer();
+                testTimer2.Interval = TimeSpan.FromSeconds(2);
+                testTimer2.Tick += (s2, args2) =>
+                {
+                    testTimer2.Stop();
+                    ShowPremiumNotification("Charger Connected", "Device is now charging", NotificationType.PowerConnected);
+
+                    // Test another after 2 seconds
+                    DispatcherTimer testTimer3 = new DispatcherTimer();
+                    testTimer3.Interval = TimeSpan.FromSeconds(2);
+                    testTimer3.Tick += (s3, args3) =>
+                    {
+                        testTimer3.Stop();
+                        ShowPremiumNotification("Battery 20%", "Low battery warning", NotificationType.BatteryLow);
+                    };
+                    testTimer3.Start();
+                };
+                testTimer2.Start();
+            };
+            testTimer.Start();
+        }
+
+        // Add these methods after the notification methods
+        private void CheckNetworkStatus()
+        {
+            try
+            {
+                bool isConnected = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+                var now = DateTime.Now;
+
+                // Only check every 5 seconds minimum
+                if ((now - _lastNetworkCheck).TotalMilliseconds < 5000)
+                    return;
+
+                _lastNetworkCheck = now;
+
+                Debug.WriteLine($"Network check: Connected = {isConnected}, WasConnected = {_wasConnected}");
+
+                if (isConnected != _wasConnected)
+                {
+                    Debug.WriteLine($"Network status changed! Notifying...");
+
+                    if (isConnected)
+                    {
+                        ShowPremiumNotification(
+                            "Network Connected",
+                            "Internet connection restored successfully.",
+                            NotificationType.NetworkConnected
+                        );
+                    }
+                    else
+                    {
+                        ShowPremiumNotification(
+                            "Network Disconnected",
+                            "Internet connection lost.",
+                            NotificationType.NetworkDisconnected
+                        );
+                    }
+
+                    _wasConnected = isConnected;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Network check error: {ex.Message}");
+            }
+        }
+
+        private void CheckPowerStatus()
+        {
+            try
+            {
+                var powerStatus = System.Windows.Forms.SystemInformation.PowerStatus;
+                var now = DateTime.Now;
+
+                // Only check every 5 seconds minimum
+                if ((now - _lastBatteryCheck).TotalMilliseconds < 5000)
+                    return;
+
+                _lastBatteryCheck = now;
+
+                // Check power line status
+                var currentPowerStatus = powerStatus.PowerLineStatus;
+
+                Debug.WriteLine($"Power check: Status = {currentPowerStatus}, LastStatus = {_lastPowerStatus}");
+
+                if (currentPowerStatus != _lastPowerStatus)
+                {
+                    Debug.WriteLine($"Power status changed! Notifying...");
+
+                    if (currentPowerStatus == System.Windows.Forms.PowerLineStatus.Online)
+                    {
+                        ShowPremiumNotification(
+                            "Charger Connected",
+                            "Device is now charging.",
+                            NotificationType.PowerConnected
+                        );
+                    }
+                    else if (currentPowerStatus == System.Windows.Forms.PowerLineStatus.Offline)
+                    {
+                        ShowPremiumNotification(
+                            "Charger Disconnected",
+                            "Device is now running on battery power.",
+                            NotificationType.PowerDisconnected
+                        );
+                    }
+
+                    _lastPowerStatus = currentPowerStatus;
+                }
+
+                // Check battery percentage for notifications
+                CheckBatteryPercentage(powerStatus);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Power check error: {ex.Message}");
+            }
+        }
+
+        private void CheckBatteryPercentage(System.Windows.Forms.PowerStatus powerStatus)
+        {
+            int batteryPercentage = (int)(powerStatus.BatteryLifePercent * 100);
+            var currentPowerStatus = powerStatus.PowerLineStatus;
+
+            Debug.WriteLine($"Battery check: {batteryPercentage}%, Power: {currentPowerStatus}, Last: {_lastBatteryPercentage}%");
+
+            // Only show battery notifications when not charging
+            if (currentPowerStatus == System.Windows.Forms.PowerLineStatus.Offline)
+            {
+                // Simplified logic - notify at key thresholds
+                if (batteryPercentage <= 20 && _lastBatteryPercentage > 20)
+                {
+                    Debug.WriteLine($"Battery low at {batteryPercentage}%! Notifying...");
+                    ShowPremiumNotification($"Battery {batteryPercentage}%",
+                        "Battery is low! Connect charger soon.", NotificationType.BatteryLow);
+                }
+                else if (batteryPercentage <= 10 && _lastBatteryPercentage > 10)
+                {
+                    Debug.WriteLine($"Battery critical at {batteryPercentage}%! Notifying...");
+                    ShowPremiumNotification($"Battery {batteryPercentage}%",
+                        "Battery critically low! Connect charger immediately!", NotificationType.BatteryCritical);
+                }
+                else if (batteryPercentage <= 5 && _lastBatteryPercentage > 5)
+                {
+                    Debug.WriteLine($"Battery extremely low at {batteryPercentage}%! Notifying...");
+                    ShowPremiumNotification($"Battery {batteryPercentage}%",
+                        "Battery extremely low! System may shutdown soon!", NotificationType.BatteryCritical);
+                }
+            }
+
+            _lastBatteryPercentage = batteryPercentage;
+        }
+
+        // Add this method
+        private void StartMonitoringTimers()
+        {
+            try
+            {
+                Debug.WriteLine("Starting monitoring timers...");
+
+                _monitoringTimer = new System.Windows.Forms.Timer();
+                _monitoringTimer.Interval = 2000; // Check every 2 seconds (more reasonable)
+                _monitoringTimer.Tick += (s, e) =>
+                {
+                    try
+                    {
+                        // Check network status
+                        CheckNetworkStatus();
+
+                        // Check power status (includes battery)
+                        CheckPowerStatus();
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Monitoring tick error: {ex.Message}");
+                    }
+                };
+
+                _monitoringTimer.Start();
+
+                // Initial checks after a short delay
+                DispatcherTimer initTimer = new DispatcherTimer();
+                initTimer.Interval = TimeSpan.FromSeconds(1);
+                initTimer.Tick += (s, e) =>
+                {
+                    initTimer.Stop();
+
+                    Debug.WriteLine("Starting initial checks...");
+                    CheckNetworkStatus();
+                    CheckPowerStatus();
+
+                    Debug.WriteLine("Monitoring timers started successfully!");
+                };
+                initTimer.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Monitoring timer error: {ex.Message}");
+            }
+        }
+
+        // Add this method too
+        private void StopMonitoringTimers()
+        {
+            try
+            {
+                Debug.WriteLine("Stopping monitoring timers...");
+                _monitoringTimer?.Stop();
+                _monitoringTimer?.Dispose();
+                _monitoringTimer = null;
+                Debug.WriteLine("Monitoring timers stopped.");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Stop monitoring error: {ex.Message}");
+            }
         }
 
         // Small UI handlers (buttons from XAML if present)
@@ -1735,7 +2230,5 @@ namespace SpeedMeterApp
                 Debug.WriteLine($"RestoreDefaults error: {ex.Message}");
             }
         }
-
-
     }
 }
