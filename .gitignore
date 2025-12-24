@@ -1,0 +1,7 @@
+bin/
+Inno Output/
+Models/
+obj/
+Output/
+publish/
+publish-x64/
