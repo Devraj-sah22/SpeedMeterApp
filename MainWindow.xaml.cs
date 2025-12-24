@@ -235,9 +235,44 @@ namespace SpeedMeterApp
             }
         }
 
+        // Add these struct and import for FlashWindowEx at the top of your class (with other DllImports)
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FLASHWINFO
+        {
+            public uint cbSize;
+            public IntPtr hwnd;
+            public uint dwFlags;
+            public uint uCount;
+            public uint dwTimeout;
+        }
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+        // Now fix the FlashTaskbarIcon method
         private void FlashTaskbarIcon()
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Find our main window handle
+                IntPtr hWnd = new WindowInteropHelper(this).Handle;
+                if (hWnd != IntPtr.Zero)
+                {
+                    FLASHWINFO fInfo = new FLASHWINFO();
+                    fInfo.cbSize = Convert.ToUInt32(Marshal.SizeOf(fInfo));
+                    fInfo.hwnd = hWnd;
+                    fInfo.dwFlags = 0x0000000C; // FLASHW_TRAY | FLASHW_TIMERNOFG
+                    fInfo.uCount = 3;
+                    fInfo.dwTimeout = 0;
+
+                    FlashWindowEx(ref fInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Flash taskbar error: {ex.Message}");
+            }
         }
 
         private void DisableSystemNotificationsForApp()
@@ -1481,7 +1516,7 @@ namespace SpeedMeterApp
                     Text = "SPEEDMETER",
                     FontSize = 24,
                     FontWeight = FontWeights.Bold,
-                    Foreground = System.Windows.Media.Brushes.White 
+                    Foreground = System.Windows.Media.Brushes.White
                 });
                 titleText.Children.Add(new TextBlock
                 {
@@ -1569,7 +1604,7 @@ namespace SpeedMeterApp
                     Content = "Close",
                     Width = 80,
                     Height = 30,
-                    HorizontalAlignment =  System.Windows.HorizontalAlignment.Center,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
                     Margin = new Thickness(0, 20, 0, 0)
                 };
                 closeBtn.Click += (s, args) => aboutWindow.Close();
