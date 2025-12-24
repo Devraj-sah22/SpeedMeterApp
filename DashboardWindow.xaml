@@ -5,43 +5,68 @@
         xmlns:d="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="SpeedMeterApp — Premium Dashboard" 
-        Width="1200" Height="750"
+        Title="SpeedMeterApp — Premium Dashboard"
+        Width="1200"
+        Height="750"
         WindowStartupLocation="CenterScreen"
         Background="#0F0F0F"
         ResizeMode="CanResizeWithGrip">
-    
+
     <!-- Simplified resources - removed problematic ones -->
     <Window.Resources>
         <!-- Simple color brushes -->
-        <SolidColorBrush x:Key="DownloadBrush" Color="#4FC3F7"/>
-        <SolidColorBrush x:Key="UploadBrush" Color="#81C784"/>
-        <SolidColorBrush x:Key="GridBrush" Color="#2A2A2A"/>
-        <SolidColorBrush x:Key="BackgroundBrush" Color="#161616"/>
-        
+        <SolidColorBrush x:Key="DownloadBrush"
+                         Color="#4FC3F7"/>
+        <SolidColorBrush x:Key="UploadBrush"
+                         Color="#81C784"/>
+        <SolidColorBrush x:Key="GridBrush"
+                         Color="#2A2A2A"/>
+        <SolidColorBrush x:Key="BackgroundBrush"
+                         Color="#161616"/>
+
         <!-- Simple button style -->
-        <Style x:Key="ModernButton" TargetType="Button">
-            <Setter Property="Background" Value="#2D2D2D"/>
-            <Setter Property="Foreground" Value="#DDDDDD"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="8,4"/>
-            <Setter Property="Margin" Value="4"/>
-            <Setter Property="Cursor" Value="Hand"/>
+        <Style x:Key="ModernButton"
+               TargetType="Button">
+            <Setter Property="Background"
+                    Value="#2D2D2D"/>
+            <Setter Property="Foreground"
+                    Value="#DDDDDD"/>
+            <Setter Property="BorderThickness"
+                    Value="0"/>
+            <Setter Property="Padding"
+                    Value="8,4"/>
+            <Setter Property="Margin"
+                    Value="4"/>
+            <Setter Property="Cursor"
+                    Value="Hand"/>
         </Style>
-        
+
         <!-- Simple tab item style -->
         <Style TargetType="TabItem">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TabItem">
-                        <Border Name="Border" Background="#1A1A1A" BorderBrush="#2A2A2A" BorderThickness="1,1,1,0" CornerRadius="6,6,0,0" Margin="2,0,2,0">
-                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                              ContentSource="Header" Margin="12,6"/>
+                        <Border Name="Border"
+                                Background="#1A1A1A"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="6,6,0,0"
+                                Margin="2,0,2,0">
+                            <ContentPresenter x:Name="ContentSite"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              ContentSource="Header"
+                                              Margin="12,6"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="#2A2A2A"/>
-                                <Setter TargetName="Border" Property="BorderBrush" Value="#4A4A4A"/>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter TargetName="Border"
+                                        Property="Background"
+                                        Value="#2A2A2A"/>
+                                <Setter TargetName="Border"
+                                        Property="BorderBrush"
+                                        Value="#4A4A4A"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -57,30 +82,58 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="#1A1A1A" BorderBrush="#2A2A2A" BorderThickness="0,0,0,1">
+        <Border Grid.Row="0"
+                Background="#1A1A1A"
+                BorderBrush="#2A2A2A"
+                BorderThickness="0,0,0,1">
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="📊" FontSize="24" Margin="0,0,10,0"/>
-                    <TextBlock Text="NETWORK ANALYTICS DASHBOARD" FontSize="18" FontWeight="Bold" Foreground="#4FC3F7"/>
+
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="📊"
+                               FontSize="24"
+                               Margin="0,0,10,0"/>
+                    <TextBlock Text="NETWORK ANALYTICS DASHBOARD"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="#4FC3F7"/>
                 </StackPanel>
-                
-                <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button x:Name="BtnRefresh" Content="🔄 Refresh" ToolTip="Refresh all data" Width="100" Style="{StaticResource ModernButton}"/>
-                    <Button x:Name="BtnExportAll" Content="📁 Export All Data" ToolTip="Export complete dataset" Width="120" Style="{StaticResource ModernButton}"/>
-                    <Button x:Name="BtnClose" Content="✕ Close" ToolTip="Close dashboard" Width="80" Background="#3A1A1A" Foreground="#FF6B6B" Style="{StaticResource ModernButton}"/>
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal">
+                    <Button x:Name="BtnRefresh"
+                            Content="🔄 Refresh"
+                            ToolTip="Refresh all data"
+                            Width="100"
+                            Style="{StaticResource ModernButton}"/>
+                    <Button x:Name="BtnExportAll"
+                            Content="📁 Export All Data"
+                            ToolTip="Export complete dataset"
+                            Width="120"
+                            Style="{StaticResource ModernButton}"/>
+                    <Button x:Name="BtnClose"
+                            Content="✕ Close"
+                            ToolTip="Close dashboard"
+                            Width="80"
+                            Background="#3A1A1A"
+                            Foreground="#FF6B6B"
+                            Style="{StaticResource ModernButton}"/>
                 </StackPanel>
             </Grid>
         </Border>
 
         <!-- Main Content -->
-        <TabControl Grid.Row="1" Margin="10" Background="Transparent" BorderThickness="0">
-            
+        <TabControl Grid.Row="1"
+                    Margin="10"
+                    Background="Transparent"
+                    BorderThickness="0">
+
             <!-- Overview Tab -->
             <TabItem Header="📈 Overview">
                 <ScrollViewer>
@@ -93,7 +146,13 @@
                         </Grid.RowDefinitions>
 
                         <!-- Key Metrics -->
-                        <Border Grid.Row="0" Margin="0,0,0,10" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="0"
+                                Margin="0,0,0,10"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -104,73 +163,185 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Current Speed -->
-                                <Border Grid.Column="0" Margin="5" Background="#1A2A2A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="0"
+                                        Margin="5"
+                                        Background="#1A2A2A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="⚡ CURRENT SPEED" FontSize="11" Foreground="#81C784" Margin="0,0,0,4"/>
-                                        <TextBlock x:Name="TxtCurrentDownload" Text="0 KB/s" FontSize="24" FontWeight="Bold" Foreground="#4FC3F7"/>
-                                        <TextBlock Text="Download" FontSize="12" Foreground="#AAAAAA"/>
-                                        <TextBlock x:Name="TxtCurrentUpload" Text="0 KB/s" FontSize="20" FontWeight="SemiBold" Foreground="#81C784" Margin="0,8,0,0"/>
-                                        <TextBlock Text="Upload" FontSize="12" Foreground="#AAAAAA"/>
+                                        <TextBlock Text="⚡ CURRENT SPEED"
+                                                   FontSize="11"
+                                                   Foreground="#81C784"
+                                                   Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="TxtCurrentDownload"
+                                                   Text="0 KB/s"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="#4FC3F7"/>
+                                        <TextBlock Text="Download"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
+                                        <TextBlock x:Name="TxtCurrentUpload"
+                                                   Text="0 KB/s"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,8,0,0"/>
+                                        <TextBlock Text="Upload"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- 24h Total -->
-                                <Border Grid.Column="1" Margin="5" Background="#1A2A1A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="1"
+                                        Margin="5"
+                                        Background="#1A2A1A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="📊 LAST 24 HOURS" FontSize="11" Foreground="#FFB74D" Margin="0,0,0,4"/>
-                                        <TextBlock x:Name="Txt24hDownload" Text="0 GB" FontSize="24" FontWeight="Bold" Foreground="#4FC3F7"/>
-                                        <TextBlock Text="Total Download" FontSize="12" Foreground="#AAAAAA"/>
-                                        <TextBlock x:Name="Txt24hUpload" Text="0 GB" FontSize="20" FontWeight="SemiBold" Foreground="#81C784" Margin="0,8,0,0"/>
-                                        <TextBlock Text="Total Upload" FontSize="12" Foreground="#AAAAAA"/>
+                                        <TextBlock Text="📊 LAST 24 HOURS"
+                                                   FontSize="11"
+                                                   Foreground="#FFB74D"
+                                                   Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="Txt24hDownload"
+                                                   Text="0 GB"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="#4FC3F7"/>
+                                        <TextBlock Text="Total Download"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
+                                        <TextBlock x:Name="Txt24hUpload"
+                                                   Text="0 GB"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,8,0,0"/>
+                                        <TextBlock Text="Total Upload"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- All Time Total -->
-                                <Border Grid.Column="2" Margin="5" Background="#2A1A2A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="2"
+                                        Margin="5"
+                                        Background="#2A1A2A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="🕒 ALL TIME" FontSize="11" Foreground="#BA68C8" Margin="0,0,0,4"/>
-                                        <TextBlock x:Name="TxtTotalDownload" Text="0 GB" FontSize="24" FontWeight="Bold" Foreground="#4FC3F7"/>
-                                        <TextBlock Text="All-time Download" FontSize="12" Foreground="#AAAAAA"/>
-                                        <TextBlock x:Name="TxtTotalUpload" Text="0 GB" FontSize="20" FontWeight="SemiBold" Foreground="#81C784" Margin="0,8,0,0"/>
-                                        <TextBlock Text="All-time Upload" FontSize="12" Foreground="#AAAAAA"/>
+                                        <TextBlock Text="🕒 ALL TIME"
+                                                   FontSize="11"
+                                                   Foreground="#BA68C8"
+                                                   Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="TxtTotalDownload"
+                                                   Text="0 GB"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="#4FC3F7"/>
+                                        <TextBlock Text="All-time Download"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
+                                        <TextBlock x:Name="TxtTotalUpload"
+                                                   Text="0 GB"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,8,0,0"/>
+                                        <TextBlock Text="All-time Upload"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- Peak Speed -->
-                                <Border Grid.Column="3" Margin="5" Background="#2A2A1A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="3"
+                                        Margin="5"
+                                        Background="#2A2A1A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="🚀 PEAK SPEED" FontSize="11" Foreground="#FF8A65" Margin="0,0,0,4"/>
-                                        <TextBlock x:Name="TxtPeakDownload" Text="0 KB/s" FontSize="24" FontWeight="Bold" Foreground="#4FC3F7"/>
-                                        <TextBlock Text="Max Download Speed" FontSize="12" Foreground="#AAAAAA"/>
-                                        <TextBlock x:Name="TxtPeakUpload" Text="0 KB/s" FontSize="20" FontWeight="SemiBold" Foreground="#81C784" Margin="0,8,0,0"/>
-                                        <TextBlock Text="Max Upload Speed" FontSize="12" Foreground="#AAAAAA"/>
+                                        <TextBlock Text="🚀 PEAK SPEED"
+                                                   FontSize="11"
+                                                   Foreground="#FF8A65"
+                                                   Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="TxtPeakDownload"
+                                                   Text="0 KB/s"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="#4FC3F7"/>
+                                        <TextBlock Text="Max Download Speed"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
+                                        <TextBlock x:Name="TxtPeakUpload"
+                                                   Text="0 KB/s"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,8,0,0"/>
+                                        <TextBlock Text="Max Upload Speed"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- Connection Info -->
-                                <Border Grid.Column="4" Margin="5" Background="#1A1A2A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="4"
+                                        Margin="5"
+                                        Background="#1A1A2A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="📡 CONNECTION" FontSize="11" Foreground="#64B5F6" Margin="0,0,0,4"/>
-                                        <TextBlock x:Name="TxtPing" Text="0 ms" FontSize="24" FontWeight="Bold" Foreground="#64B5F6"/>
-                                        <TextBlock Text="Current Ping" FontSize="12" Foreground="#AAAAAA"/>
-                                        <TextBlock x:Name="TxtUptime" Text="0:00" FontSize="20" FontWeight="SemiBold" Foreground="#81C784" Margin="0,8,0,0"/>
-                                        <TextBlock Text="Session Uptime" FontSize="12" Foreground="#AAAAAA"/>
+                                        <TextBlock Text="📡 CONNECTION"
+                                                   FontSize="11"
+                                                   Foreground="#64B5F6"
+                                                   Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="TxtPing"
+                                                   Text="0 ms"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="#64B5F6"/>
+                                        <TextBlock Text="Current Ping"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
+                                        <TextBlock x:Name="TxtUptime"
+                                                   Text="0:00"
+                                                   FontSize="20"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,8,0,0"/>
+                                        <TextBlock Text="Session Uptime"
+                                                   FontSize="12"
+                                                   Foreground="#AAAAAA"/>
                                     </StackPanel>
                                 </Border>
                             </Grid>
                         </Border>
 
                         <!-- Hourly Breakdown -->
-                        <Border Grid.Row="1" Margin="0,0,0,10" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="1"
+                                Margin="0,0,0,10"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                
-                                <TextBlock Grid.Row="0" Text="🕐 HOURLY USAGE BREAKDOWN (LAST 24H)" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                
-                                <ItemsControl Grid.Row="1" x:Name="HourlyBreakdownItems">
+
+                                <TextBlock Grid.Row="0"
+                                           Text="🕐 HOURLY USAGE BREAKDOWN (LAST 24H)"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
+
+                                <ItemsControl Grid.Row="1"
+                                              x:Name="HourlyBreakdownItems">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel Orientation="Horizontal"/>
@@ -181,60 +352,106 @@
                         </Border>
 
                         <!-- Speed History Chart -->
-                        <Border Grid.Row="2" Margin="0,0,0,10" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="2"
+                                Margin="0,0,0,10"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                
-                                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                    <TextBlock Text="📈 SPEED HISTORY (LAST 24H)" FontSize="14" FontWeight="Bold" Foreground="#DDDDDD"/>
-                                    <ComboBox x:Name="CmbTimeRange" Width="120" Margin="20,0,0,0" SelectedIndex="0">
+
+                                <StackPanel Grid.Row="0"
+                                            Orientation="Horizontal">
+                                    <TextBlock Text="📈 SPEED HISTORY (LAST 24H)"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="#DDDDDD"/>
+                                    <ComboBox x:Name="CmbTimeRange"
+                                              Width="120"
+                                              Margin="20,0,0,0"
+                                              SelectedIndex="0">
                                         <ComboBoxItem Content="Last 24 Hours"/>
                                         <ComboBoxItem Content="Last 12 Hours"/>
                                         <ComboBoxItem Content="Last 6 Hours"/>
                                         <ComboBoxItem Content="Last Hour"/>
                                     </ComboBox>
                                 </StackPanel>
-                                
-                                <Canvas Grid.Row="1" x:Name="SpeedChartCanvas" Background="Transparent" Margin="0,10,0,0"/>
+
+                                <Canvas Grid.Row="1"
+                                        x:Name="SpeedChartCanvas"
+                                        Background="Transparent"
+                                        Margin="0,10,0,0"/>
                             </Grid>
                         </Border>
 
                         <!-- Data Table -->
-                        <Border Grid.Row="3" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="3"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
-                                
-                                <TextBlock Grid.Row="0" Text="📋 DETAILED SAMPLE DATA" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                
-                                <DataGrid Grid.Row="1" x:Name="DataGridSamples" 
-                                         AutoGenerateColumns="False" 
-                                         IsReadOnly="True"
-                                         Background="#1A1A1A"
-                                         BorderBrush="#2A2A2A"
-                                         RowBackground="#1A1A1A"
-                                         AlternatingRowBackground="#222222"
-                                         HeadersVisibility="Column"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         Margin="0,0,0,10">
+
+                                <TextBlock Grid.Row="0"
+                                           Text="📋 DETAILED SAMPLE DATA"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
+
+                                <DataGrid Grid.Row="1"
+                                          x:Name="DataGridSamples"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          Background="#1A1A1A"
+                                          BorderBrush="#2A2A2A"
+                                          RowBackground="#1A1A1A"
+                                          AlternatingRowBackground="#222222"
+                                          HeadersVisibility="Column"
+                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                          Margin="0,0,0,10">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp, StringFormat='HH:mm:ss'}" Width="100"/>
-                                        <DataGridTextColumn Header="Download (KB/s)" Binding="{Binding DownloadKBps, StringFormat='F2'}" Width="120"/>
-                                        <DataGridTextColumn Header="Upload (KB/s)" Binding="{Binding UploadKBps, StringFormat='F2'}" Width="120"/>
-                                        <DataGridTextColumn Header="Total DL" Binding="{Binding TotalDownloadBytes}" Width="120"/>
-                                        <DataGridTextColumn Header="Total UL" Binding="{Binding TotalUploadBytes}" Width="120"/>
+                                        <DataGridTextColumn Header="Timestamp"
+                                                            Binding="{Binding Timestamp, StringFormat='HH:mm:ss'}"
+                                                            Width="100"/>
+                                        <DataGridTextColumn Header="Download (KB/s)"
+                                                            Binding="{Binding DownloadKBps, StringFormat='F2'}"
+                                                            Width="120"/>
+                                        <DataGridTextColumn Header="Upload (KB/s)"
+                                                            Binding="{Binding UploadKBps, StringFormat='F2'}"
+                                                            Width="120"/>
+                                        <DataGridTextColumn Header="Total DL"
+                                                            Binding="{Binding TotalDownloadBytes}"
+                                                            Width="120"/>
+                                        <DataGridTextColumn Header="Total UL"
+                                                            Binding="{Binding TotalUploadBytes}"
+                                                            Width="120"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
-                                
-                                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <TextBlock x:Name="TxtSampleCount" Text="0 samples" Foreground="#AAAAAA" VerticalAlignment="Center"/>
-                                    <Button x:Name="BtnExportSamples" Content="Export Selected" Width="120" Margin="10,0,0,0" Style="{StaticResource ModernButton}"/>
+
+                                <StackPanel Grid.Row="2"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Right">
+                                    <TextBlock x:Name="TxtSampleCount"
+                                               Text="0 samples"
+                                               Foreground="#AAAAAA"
+                                               VerticalAlignment="Center"/>
+                                    <Button x:Name="BtnExportSamples"
+                                            Content="Export Selected"
+                                            Width="120"
+                                            Margin="10,0,0,0"
+                                            Style="{StaticResource ModernButton}"/>
                                 </StackPanel>
                             </Grid>
                         </Border>
@@ -254,7 +471,13 @@
                         </Grid.RowDefinitions>
 
                         <!-- Statistics Summary -->
-                        <Border Grid.Row="0" Margin="0,0,0,10" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="0"
+                                Margin="0,0,0,10"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
@@ -263,9 +486,17 @@
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Download Statistics -->
-                                <Border Grid.Column="0" Margin="5" Background="#1A2A2A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="0"
+                                        Margin="5"
+                                        Background="#1A2A2A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="⬇️ DOWNLOAD STATISTICS" FontSize="12" FontWeight="Bold" Foreground="#4FC3F7" Margin="0,0,0,8"/>
+                                        <TextBlock Text="⬇️ DOWNLOAD STATISTICS"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"
+                                                   Foreground="#4FC3F7"
+                                                   Margin="0,0,0,8"/>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
@@ -277,26 +508,70 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Average:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TxtAvgDownload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Peak:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TxtMaxDownload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Min:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="TxtMinDownload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Std Dev:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="TxtStdDevDownload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="Average:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtAvgDownload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="Peak:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtMaxDownload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       Text="Min:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtMinDownload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="0"
+                                                       Text="Std Dev:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtStdDevDownload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
                                         </Grid>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- Upload Statistics -->
-                                <Border Grid.Column="1" Margin="5" Background="#1A2A1A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="1"
+                                        Margin="5"
+                                        Background="#1A2A1A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="⬆️ UPLOAD STATISTICS" FontSize="12" FontWeight="Bold" Foreground="#81C784" Margin="0,0,0,8"/>
+                                        <TextBlock Text="⬆️ UPLOAD STATISTICS"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"
+                                                   Foreground="#81C784"
+                                                   Margin="0,0,0,8"/>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
@@ -308,26 +583,70 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Average:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TxtAvgUpload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Peak:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TxtMaxUpload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Min:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="TxtMinUpload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Std Dev:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="1" x:Name="TxtStdDevUpload" Text="0 KB/s" FontSize="11" Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="Average:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtAvgUpload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="Peak:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtMaxUpload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       Text="Min:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtMinUpload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="0"
+                                                       Text="Std Dev:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="3"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtStdDevUpload"
+                                                       Text="0 KB/s"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
                                         </Grid>
                                     </StackPanel>
                                 </Border>
 
                                 <!-- Usage Patterns -->
-                                <Border Grid.Column="2" Margin="5" Background="#2A1A2A" CornerRadius="6" Padding="10">
+                                <Border Grid.Column="2"
+                                        Margin="5"
+                                        Background="#2A1A2A"
+                                        CornerRadius="6"
+                                        Padding="10">
                                     <StackPanel>
-                                        <TextBlock Text="🔄 USAGE PATTERNS" FontSize="12" FontWeight="Bold" Foreground="#BA68C8" Margin="0,0,0,8"/>
+                                        <TextBlock Text="🔄 USAGE PATTERNS"
+                                                   FontSize="12"
+                                                   FontWeight="Bold"
+                                                   Foreground="#BA68C8"
+                                                   Margin="0,0,0,8"/>
                                         <Grid>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
@@ -338,15 +657,42 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            
-                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Busiest Hour:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TxtBusiestHour" Text="N/A" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Download/Upload Ratio:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TxtRatio" Text="0:0" FontSize="11" Foreground="#DDDDDD"/>
-                                            
-                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Data per Day:" FontSize="11" Foreground="#AAAAAA"/>
-                                            <TextBlock Grid.Row="2" Grid.Column="1" x:Name="TxtDailyAverage" Text="0 GB" FontSize="11" Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="0"
+                                                       Text="Busiest Hour:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="0"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtBusiestHour"
+                                                       Text="N/A"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="0"
+                                                       Text="Download/Upload Ratio:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="1"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtRatio"
+                                                       Text="0:0"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
+
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="0"
+                                                       Text="Data per Day:"
+                                                       FontSize="11"
+                                                       Foreground="#AAAAAA"/>
+                                            <TextBlock Grid.Row="2"
+                                                       Grid.Column="1"
+                                                       x:Name="TxtDailyAverage"
+                                                       Text="0 GB"
+                                                       FontSize="11"
+                                                       Foreground="#DDDDDD"/>
                                         </Grid>
                                     </StackPanel>
                                 </Border>
@@ -354,56 +700,120 @@
                         </Border>
 
                         <!-- Distribution Charts -->
-                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                        <Grid Grid.Row="1"
+                              Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            
-                            <Border Grid.Column="0" Margin="0,0,5,0" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+
+                            <Border Grid.Column="0"
+                                    Margin="0,0,5,0"
+                                    Background="#161616"
+                                    BorderBrush="#2A2A2A"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="12">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="📊 DOWNLOAD DISTRIBUTION" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                    <Canvas Grid.Row="1" x:Name="DownloadDistributionCanvas" Background="Transparent"/>
+                                    <TextBlock Grid.Row="0"
+                                               Text="📊 DOWNLOAD DISTRIBUTION"
+                                               FontSize="12"
+                                               FontWeight="Bold"
+                                               Margin="0,0,0,10"
+                                               Foreground="#DDDDDD"/>
+                                    <Canvas Grid.Row="1"
+                                            x:Name="DownloadDistributionCanvas"
+                                            Background="Transparent"/>
                                 </Grid>
                             </Border>
-                            
-                            <Border Grid.Column="1" Margin="5,0,0,0" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+
+                            <Border Grid.Column="1"
+                                    Margin="5,0,0,0"
+                                    Background="#161616"
+                                    BorderBrush="#2A2A2A"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="12">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <TextBlock Grid.Row="0" Text="📊 UPLOAD DISTRIBUTION" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                    <Canvas Grid.Row="1" x:Name="UploadDistributionCanvas" Background="Transparent"/>
+                                    <TextBlock Grid.Row="0"
+                                               Text="📊 UPLOAD DISTRIBUTION"
+                                               FontSize="12"
+                                               FontWeight="Bold"
+                                               Margin="0,0,0,10"
+                                               Foreground="#DDDDDD"/>
+                                    <Canvas Grid.Row="1"
+                                            x:Name="UploadDistributionCanvas"
+                                            Background="Transparent"/>
                                 </Grid>
                             </Border>
                         </Grid>
 
                         <!-- Timeline Analysis -->
-                        <Border Grid.Row="2" Margin="0,0,0,10" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="2"
+                                Margin="0,0,0,10"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Text="🕐 TIMELINE ANALYSIS" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                <Canvas Grid.Row="1" x:Name="TimelineCanvas" Background="Transparent"/>
+                                <TextBlock Grid.Row="0"
+                                           Text="🕐 TIMELINE ANALYSIS"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
+                                <Canvas Grid.Row="1"
+                                        x:Name="TimelineCanvas"
+                                        Background="Transparent"/>
                             </Grid>
                         </Border>
 
                         <!-- Export Options -->
-                        <Border Grid.Row="3" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="3"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <StackPanel>
-                                <TextBlock Text="📁 EXPORT OPTIONS" FontSize="12" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
+                                <TextBlock Text="📁 EXPORT OPTIONS"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="BtnExportCSV" Content="Export as CSV" Width="120" Style="{StaticResource ModernButton}"/>
-                                    <Button x:Name="BtnExportJSON" Content="Export as JSON" Width="120" Margin="10,0,0,0" Style="{StaticResource ModernButton}"/>
-                                    <Button x:Name="BtnExportReport" Content="Generate Report" Width="120" Margin="10,0,0,0" Style="{StaticResource ModernButton}"/>
-                                    <Button x:Name="BtnPrint" Content="Print Summary" Width="120" Margin="10,0,0,0" Style="{StaticResource ModernButton}"/>
+                                    <Button x:Name="BtnExportCSV"
+                                            Content="Export as CSV"
+                                            Width="120"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Button x:Name="BtnExportJSON"
+                                            Content="Export as JSON"
+                                            Width="120"
+                                            Margin="10,0,0,0"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Button x:Name="BtnExportReport"
+                                            Content="Generate Report"
+                                            Width="120"
+                                            Margin="10,0,0,0"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Button x:Name="BtnPrint"
+                                            Content="Print Summary"
+                                            Width="120"
+                                            Margin="10,0,0,0"
+                                            Style="{StaticResource ModernButton}"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -420,22 +830,40 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
                         <!-- Data Retention -->
-                        <Border Grid.Row="0" Margin="0,0,0,20" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="0"
+                                Margin="0,0,0,20"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <StackPanel>
-                                <TextBlock Text="📦 DATA RETENTION" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
+                                <TextBlock Text="📦 DATA RETENTION"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    
-                                    <TextBlock Grid.Column="0" Text="Keep history for:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#DDDDDD"/>
-                                    <ComboBox Grid.Column="1" x:Name="CmbRetention" Width="150" SelectedIndex="2">
+
+                                    <TextBlock Grid.Column="0"
+                                               Text="Keep history for:"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,10,0"
+                                               Foreground="#DDDDDD"/>
+                                    <ComboBox Grid.Column="1"
+                                              x:Name="CmbRetention"
+                                              Width="150"
+                                              SelectedIndex="2">
                                         <ComboBoxItem Content="1 day"/>
                                         <ComboBoxItem Content="3 days"/>
                                         <ComboBoxItem Content="7 days"/>
@@ -443,38 +871,148 @@
                                         <ComboBoxItem Content="90 days"/>
                                         <ComboBoxItem Content="1 year"/>
                                     </ComboBox>
-                                    <Button Grid.Column="2" x:Name="BtnApplyRetention" Content="Apply" Width="80" Margin="10,0,0,0" Style="{StaticResource ModernButton}"/>
+                                    <Button Grid.Column="2"
+                                            x:Name="BtnApplyRetention"
+                                            Content="Apply"
+                                            Width="80"
+                                            Margin="10,0,0,0"
+                                            Style="{StaticResource ModernButton}"/>
                                 </Grid>
-                                <TextBlock Text="Current storage: 0 MB" x:Name="TxtStorageUsage" FontSize="11" Foreground="#AAAAAA" Margin="0,10,0,0"/>
+                                <TextBlock Text="Current storage: 0 MB"
+                                           x:Name="TxtStorageUsage"
+                                           FontSize="11"
+                                           Foreground="#AAAAAA"
+                                           Margin="0,10,0,0"/>
                             </StackPanel>
                         </Border>
 
                         <!-- Theme Settings -->
-                        <Border Grid.Row="1" Margin="0,0,0,20" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="1"
+                                Margin="0,0,0,20"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <StackPanel>
-                                <TextBlock Text="🎨 THEME SETTINGS" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
-                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                                    <TextBlock Text="Accent Color:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#DDDDDD"/>
-                                    <Button x:Name="BtnPickColor" Content="Pick Color" Width="100" Style="{StaticResource ModernButton}"/>
-                                    <Border x:Name="BorderColorPreview" Width="30" Height="20" Background="#4FC3F7" Margin="10,0,0,0" CornerRadius="3"/>
+                                <TextBlock Text="🎨 THEME SETTINGS"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0,10,0,0">
+                                    <TextBlock Text="Accent Color:"
+                                               VerticalAlignment="Center"
+                                               Margin="0,0,10,0"
+                                               Foreground="#DDDDDD"/>
+                                    <Button x:Name="BtnPickColor"
+                                            Content="Pick Color"
+                                            Width="100"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Border x:Name="BorderColorPreview"
+                                            Width="30"
+                                            Height="20"
+                                            Background="#4FC3F7"
+                                            Margin="10,0,0,0"
+                                            CornerRadius="3"/>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
 
                         <!-- Actions -->
-                        <Border Grid.Row="2" Background="#161616" BorderBrush="#2A2A2A" BorderThickness="1" CornerRadius="8" Padding="12">
+                        <Border Grid.Row="2"
+                                Background="#161616"
+                                BorderBrush="#2A2A2A"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
                             <StackPanel>
-                                <TextBlock Text="🔧 ACTIONS" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#DDDDDD"/>
+                                <TextBlock Text="🔧 ACTIONS"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Margin="0,0,0,10"
+                                           Foreground="#DDDDDD"/>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    
-                                    <Button Grid.Column="0" x:Name="BtnClearData" Content="Clear History" Background="#3A1A1A" Foreground="#FF6B6B" Style="{StaticResource ModernButton}"/>
-                                    <Button Grid.Column="1" x:Name="BtnResetSettings" Content="Reset Settings" Margin="10,0,10,0" Style="{StaticResource ModernButton}"/>
-                                    <Button Grid.Column="2" x:Name="BtnBackupData" Content="Backup Data" Style="{StaticResource ModernButton}"/>
+
+                                    <Button Grid.Column="0"
+                                            x:Name="BtnClearData"
+                                            Content="Clear History"
+                                            Background="#3A1A1A"
+                                            Foreground="#FF6B6B"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Button Grid.Column="1"
+                                            x:Name="BtnResetSettings"
+                                            Content="Reset Settings"
+                                            Margin="10,0,10,0"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <Button Grid.Column="2"
+                                            x:Name="BtnBackupData"
+                                            Content="Backup Data"
+                                            Style="{StaticResource ModernButton}"/>
+                                    <!-- Developer Info Section - ADD THIS -->
+                                    <Border Grid.Row="4"
+                                            Margin="0,20,0,0"
+                                            Background="#161616"
+                                            BorderBrush="#2A2A2A"
+                                            BorderThickness="1"
+                                            CornerRadius="8"
+                                            Padding="12">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Developer Icon -->
+                                            <Border Grid.Column="0"
+                                                    Width="48"
+                                                    Height="48"
+                                                    CornerRadius="24"
+                                                    Background="#1A2A2A"
+                                                    Margin="0,0,12,0">
+                                                <TextBlock Text="👨‍💻"
+                                                           FontSize="24"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Developer Info -->
+                                            <StackPanel Grid.Column="1"
+                                                        VerticalAlignment="Center">
+                                                <TextBlock Text="DEVELOPER"
+                                                           FontSize="11"
+                                                           FontWeight="Bold"
+                                                           Foreground="#4FC3F7"
+                                                           Margin="0,0,0,4"/>
+                                                <TextBlock Text="SpeedMeter App"
+                                                           FontSize="14"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="#DDDDDD"
+                                                           Margin="0,0,0,2"/>
+                                                <TextBlock Text="Version 1.0.0"
+                                                           FontSize="11"
+                                                           Foreground="#AAAAAA"
+                                                           Margin="0,0,0,4"/>
+                                            </StackPanel>
+
+                                            <!-- Portfolio Button -->
+                                            <Button Grid.Column="2"
+                                                    x:Name="BtnDeveloperPortfolio"
+                                                    Content="View Portfolio"
+                                                    Width="120"
+                                                    Height="32"
+                                                    Style="{StaticResource ModernButton}"
+                                                    Background="#2A1A2A"
+                                                    Foreground="#BA68C8"/>
+                                        </Grid>
+                                    </Border>
                                 </Grid>
                             </StackPanel>
                         </Border>

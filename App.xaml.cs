@@ -8,5 +8,15 @@ namespace SpeedMeterApp
         {
             base.OnExit(e);
         }
+    
+    private void Application_Activated(object sender, EventArgs e)
+    {
+        // Ensure our windows stay on top
+        foreach (Window window in this.Windows)
+        {
+            window.Topmost = true;
+        }
     }
+    }
+
 }

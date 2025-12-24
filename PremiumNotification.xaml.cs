@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
@@ -65,6 +67,54 @@ namespace SpeedMeterApp
                 }
             };
         }
+        // Add these Windows API imports at the top
+        [DllImport("user32.dll")]
+        private static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+        private static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+        private const uint SWP_NOSIZE = 0x0001;
+        private const uint SWP_NOMOVE = 0x0002;
+        private const uint SWP_SHOWWINDOW = 0x0040;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            try
+            {
+                // Get window handle
+                var helper = new WindowInteropHelper(this);
+                IntPtr hWnd = helper.Handle;
+
+                if (hWnd != IntPtr.Zero)
+                {
+                    // Force window to be topmost
+                    SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0,
+                        SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+
+                    // Try to bring to foreground
+                    SetForegroundWindow(hWnd);
+
+                    // Activate window
+                    SetActiveWindow(hWnd);
+
+                    // Additional: Make sure it's really visible
+                    this.Topmost = true;
+                    this.Activate();
+                    this.Focus();
+                }
+            }
+            catch { /* Ignore errors */ }
+        }
 
         private void PositionWindow()
         {
@@ -80,7 +130,7 @@ namespace SpeedMeterApp
                 // Position at top-right corner with some margin
                 this.Left = workingArea.Right - width - 20; // 20px from right edge
                 this.Top = workingArea.Top + 20; // 20px from top edge
-                
+
                 Debug.WriteLine($"Positioning notification at: Left={this.Left}, Top={this.Top}");
             }
             catch (Exception ex)
@@ -117,7 +167,7 @@ namespace SpeedMeterApp
             {
                 mainBorder.BeginAnimation(MarginProperty, slideIn);
             }
-            
+
             this.BeginAnimation(OpacityProperty, fadeIn);
 
             _closeTimer?.Start();
@@ -173,7 +223,7 @@ namespace SpeedMeterApp
             };
 
             slideOut.Completed += (s, e) => Close();
-            
+
             var mainBorder = (Border?)FindName("MainBorder");
             if (mainBorder != null)
             {

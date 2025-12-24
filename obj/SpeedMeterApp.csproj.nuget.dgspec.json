@@ -41,12 +41,6 @@
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
           "dependencies": {
-            "Microsoft.NET.ILLink.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[8.0.20, )",
-              "autoReferenced": true
-            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[8.0.8, )"
@@ -69,11 +63,7 @@
               "version": "[8.0.20, 8.0.20]"
             },
             {
-              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x86",
+              "name": "Microsoft.NETCore.App.Host.win-x64",
               "version": "[8.0.20, 8.0.20]"
             },
             {
@@ -81,15 +71,7 @@
               "version": "[8.0.20, 8.0.20]"
             },
             {
-              "name": "Microsoft.NETCore.App.Runtime.win-x86",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
               "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.20, 8.0.20]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
               "version": "[8.0.20, 8.0.20]"
             }
           ],
@@ -102,11 +84,6 @@
             }
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
-        }
-      },
-      "runtimes": {
-        "win-x86": {
-          "#import": []
         }
       }
     }

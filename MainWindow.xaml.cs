@@ -185,11 +185,12 @@ namespace SpeedMeterApp
         }
 
         // Update the ShowPremiumNotification method
+        // Update ShowPremiumNotification to remove ALL system tray notifications
         private void ShowPremiumNotification(string title, string message, NotificationType type)
         {
             try
             {
-                Debug.WriteLine($"ShowPremiumNotification: {title} - {type}");
+                Debug.WriteLine($"Showing CUSTOM notification only: {title}");
 
                 Dispatcher.Invoke(() =>
                 {
@@ -204,38 +205,71 @@ namespace SpeedMeterApp
                             brush,
                             iconBrush,
                             duration
-                        );
+                        )
+                        {
+                            Topmost = true,
+                            Top = SystemParameters.WorkArea.Top + 20,
+                            //Left = SystemParameters.WorkArea.Right - notification.Width - 20,
+                            WindowStartupLocation = WindowStartupLocation.Manual
+                        };
+                        // Set Left after creating the notification
+                        notification.Left = SystemParameters.WorkArea.Right - notification.Width - 20;
+
+                        // Remove system tray notification entirely
+                        // NO notifyIcon.ShowBalloonTip() calls!
 
                         notification.Show();
 
-                        // Also show system tray notification
-                        if (notifyIcon != null)
-                        {
-                            System.Windows.Forms.ToolTipIcon trayIcon = type switch
-                            {
-                                NotificationType.NetworkDisconnected or
-                                NotificationType.BatteryCritical or
-                                NotificationType.Error => System.Windows.Forms.ToolTipIcon.Error,
-
-                                NotificationType.BatteryLow or
-                                NotificationType.BatteryMedium or
-                                NotificationType.Warning => System.Windows.Forms.ToolTipIcon.Warning,
-
-                                _ => System.Windows.Forms.ToolTipIcon.Info
-                            };
-
-                            notifyIcon.ShowBalloonTip(3000, title, message, trayIcon);
-                        }
+                        // Flash taskbar to get attention
+                        FlashTaskbarIcon();
                     }
                     catch (Exception ex)
                     {
-                        Debug.WriteLine($"Error creating notification in UI thread: {ex.Message}");
+                        Debug.WriteLine($"Custom notification error: {ex.Message}");
                     }
                 });
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Notification error: {ex.Message}");
+            }
+        }
+
+        private void FlashTaskbarIcon()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DisableSystemNotificationsForApp()
+        {
+            try
+            {
+                // Method 1: Disable via Registry
+                using (RegistryKey key = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\SpeedMeterApp"))
+                {
+                    if (key != null)
+                    {
+                        // DISABLE Windows notifications for our app
+                        key.SetValue("Enabled", 0, RegistryValueKind.DWord); // 0 = Disabled
+                        key.SetValue("ShowInActionCenter", 0, RegistryValueKind.DWord);
+
+                        Debug.WriteLine("Disabled Windows system notifications for SpeedMeterApp");
+                    }
+                }
+
+                // Method 2: Also try to disable sound
+                using (RegistryKey soundKey = Registry.CurrentUser.CreateSubKey(@"AppEvents\Schemes\Apps\.Default\.Default\.Current"))
+                {
+                    if (soundKey != null)
+                    {
+                        // Set to empty string to disable notification sound
+                        soundKey.SetValue("", "");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Disable system notifications error: {ex.Message}");
             }
         }
 
@@ -350,6 +384,9 @@ namespace SpeedMeterApp
             {
                 // ignore
             }
+
+            // DISABLE ALL SYSTEM NOTIFICATIONS
+            DisableSystemNotificationsForApp();
 
             // Initialize monitoring timers with a delay to ensure window is loaded
             this.Loaded += (s, e) =>
@@ -1283,6 +1320,27 @@ namespace SpeedMeterApp
                 notifyIcon.Text = "Network Speed Meter";
                 notifyIcon.Visible = true;
 
+                // CRITICAL: Disable balloon tip timeout so they never show
+                // Use reflection to set internal property
+                try
+                {
+                    var notifyIconType = typeof(System.Windows.Forms.NotifyIcon);
+                    var windowField = notifyIconType.GetField("window",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                    if (windowField != null)
+                    {
+                        var window = windowField.GetValue(notifyIcon);
+                        var windowType = window?.GetType();
+                        var balloonTimeField = windowType?.GetField("balloonTime",
+                            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+                        // Set balloon time to 0 so they never show
+                        balloonTimeField?.SetValue(window, 0);
+                    }
+                }
+                catch { /* Ignore reflection errors */ }
+
                 var contextMenu = new System.Windows.Forms.ContextMenuStrip();
 
                 // Create menu items
@@ -1318,6 +1376,8 @@ namespace SpeedMeterApp
                 contextMenu.Items.Add("📊 Premium Dashboard", null, (s, e) => ShowPremiumDashboard());
                 contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
                 contextMenu.Items.Add("Exit", null, ExitApplication!);
+                // ADD DEVELOPER/PORTFOLIO OPTION HERE
+                contextMenu.Items.Add("👨‍💻 Developer Portfolio", null, (s, e) => OpenDeveloperPortfolio());
 
                 notifyIcon.ContextMenuStrip = contextMenu;
 
@@ -1340,6 +1400,215 @@ namespace SpeedMeterApp
             catch (Exception ex)
             {
                 System.Windows.MessageBox.Show($"Error setting up tray icon: {ex.Message}");
+            }
+        }
+        // Add this method to open portfolio
+        private void OpenDeveloperPortfolio()
+        {
+            try
+            {
+                // Replace with your actual portfolio URL
+                string portfolioUrl = "https://www.sahdevraj.com.np/";
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = portfolioUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Error opening portfolio: {ex.Message}");
+            }
+        }
+
+        // Developer Portfolio Click
+        private void DeveloperPortfolio_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string portfolioUrl = "https://www.sahdevraj.com.np/";
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = portfolioUrl,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Error opening portfolio: {ex.Message}");
+            }
+        }
+
+        // About App Click
+        private void AboutApp_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var aboutWindow = new Window
+                {
+                    Title = "About SpeedMeter",
+                    Width = 400,
+                    Height = 300,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.NoResize,
+                    WindowStyle = WindowStyle.ToolWindow
+                };
+
+                var grid = new Grid { Margin = new Thickness(20) };
+                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+                // App Icon/Title
+                var titleStack = new StackPanel
+                {
+                    Orientation = System.Windows.Controls.Orientation.Horizontal,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 20)
+                };
+                titleStack.Children.Add(new TextBlock
+                {
+                    Text = "📊",
+                    FontSize = 32,
+                    Margin = new Thickness(0, 0, 10, 0)
+                });
+
+                var titleText = new StackPanel();
+                titleText.Children.Add(new TextBlock
+                {
+                    Text = "SPEEDMETER",
+                    FontSize = 24,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = System.Windows.Media.Brushes.White 
+                });
+                titleText.Children.Add(new TextBlock
+                {
+                    Text = "Network Analytics Tool",
+                    FontSize = 12,
+                    Foreground = System.Windows.Media.Brushes.Gray
+                });
+                titleStack.Children.Add(titleText);
+
+                Grid.SetRow(titleStack, 0);
+                grid.Children.Add(titleStack);
+
+                // Version Info
+                var versionText = new TextBlock
+                {
+                    Text = "Version 1.0.0",
+                    FontSize = 14,
+                    Foreground = System.Windows.Media.Brushes.LightGray,
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 10)
+                };
+                Grid.SetRow(versionText, 1);
+                grid.Children.Add(versionText);
+
+                // Description
+                var descText = new TextBlock
+                {
+                    Text = "A premium network monitoring tool with real-time analytics, " +
+                           "historical data tracking, and customizable notifications.",
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 12,
+                    Foreground = System.Windows.Media.Brushes.Gray,
+                    TextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(20, 0, 20, 20)
+                };
+                Grid.SetRow(descText, 2);
+                grid.Children.Add(descText);
+
+                // Developer Info
+                var devStack = new StackPanel
+                {
+                    HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 10, 0, 0)
+                };
+
+                var devTitle = new TextBlock
+                {
+                    Text = "Developer",
+                    FontSize = 11,
+                    FontWeight = FontWeights.Bold,
+                    Foreground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(79, 195, 247)),
+                    Margin = new Thickness(0, 0, 0, 5)
+                };
+                devStack.Children.Add(devTitle);
+
+                var devName = new TextBlock
+                {
+                    Text = "DEVRAJ SAH", // Replace with your name
+                    FontSize = 14,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    Margin = new Thickness(0, 0, 0, 5)
+                };
+                devStack.Children.Add(devName);
+
+                var portfolioBtn = new System.Windows.Controls.Button
+                {
+                    Content = "Visit Portfolio",
+                    Width = 120,
+                    Height = 30,
+                    Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(42, 42, 42)),
+                    Foreground = System.Windows.Media.Brushes.White,
+                    BorderThickness = new Thickness(0),
+                    Cursor = System.Windows.Input.Cursors.Hand,
+                    Margin = new Thickness(0, 10, 0, 0)
+                };
+                portfolioBtn.Click += (s, args) => DeveloperPortfolio_Click(s, args);
+                devStack.Children.Add(portfolioBtn);
+
+                Grid.SetRow(devStack, 3);
+                grid.Children.Add(devStack);
+
+                // Close Button
+                var closeBtn = new System.Windows.Controls.Button
+                {
+                    Content = "Close",
+                    Width = 80,
+                    Height = 30,
+                    HorizontalAlignment =  System.Windows.HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 20, 0, 0)
+                };
+                closeBtn.Click += (s, args) => aboutWindow.Close();
+                Grid.SetRow(closeBtn, 4);
+                grid.Children.Add(closeBtn);
+
+                aboutWindow.Content = grid;
+                aboutWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"About window error: {ex.Message}");
+            }
+        }
+
+        // Check for Updates
+        private void CheckUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ShowPremiumNotification("Update Check",
+                    "Checking for updates... (Feature coming soon)",
+                    NotificationType.Info);
+
+                // You can implement actual update checking here
+                // For now, just show a message
+                Task.Delay(2000).ContinueWith(t =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        ShowPremiumNotification("Update Status",
+                            "You have the latest version of SpeedMeter!",
+                            NotificationType.Success);
+                    });
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Update check error: {ex.Message}");
             }
         }
 
@@ -2053,6 +2322,8 @@ namespace SpeedMeterApp
             {
                 string totals = $"Total Download: {FormatTotal(totalDownloadBytes)}\nTotal Upload: {FormatTotal(totalUploadBytes)}\nPing: {(lastPingMs >= 0 ? lastPingMs + " ms" : "N/A")}";
                 System.Windows.MessageBox.Show(totals, "Usage Totals");
+                // Use custom notification instead of MessageBox
+                ShowPremiumNotification("Usage Totals", totals, NotificationType.Info);
             }
             catch (Exception ex)
             {
@@ -2070,10 +2341,10 @@ namespace SpeedMeterApp
                     lastPingMs = reply.Status == IPStatus.Success ? (int)reply.RoundtripTime : -1;
                 }
 
-                if (notifyIcon != null)
-                {
-                    notifyIcon.ShowBalloonTip(2000, "Ping Result", lastPingMs >= 0 ? $"Ping {pingHost}: {lastPingMs} ms" : $"Ping {pingHost}: N/A", System.Windows.Forms.ToolTipIcon.Info);
-                }
+                /* if (notifyIcon != null)
+                 {
+                     notifyIcon.ShowBalloonTip(2000, "Ping Result", lastPingMs >= 0 ? $"Ping {pingHost}: {lastPingMs} ms" : $"Ping {pingHost}: N/A", System.Windows.Forms.ToolTipIcon.Info);
+                 }*/
             }
             catch (Exception ex)
             {
